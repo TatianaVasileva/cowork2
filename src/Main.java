@@ -11,7 +11,7 @@ public class Main {
                         "Свекла"
                 };
         int[] price = {70, 400, 40, 88, 20};
-        int[] numer = new int[5];
+        int[] number = new int[5];
         System.out.println("Список продуктов и стоимости единицы:");
         for (int i = 0; i < products.length; i++) {
             System.out.println((i + 1) + "." + products[i] + " " + price[i] + " руб.ед");
@@ -36,28 +36,30 @@ public class Main {
             }
             try {
                 productNum = Integer.parseInt(part[0]) - 1;
-                if ((productNum + 1) > products.length || productNum + 1 <= 0) {
-                    System.out.println("Ошибка.Нужно выбрать номер продукта из списка");
-                    continue;
-                }
                 amount = Integer.parseInt(part[1]);
-                if (amount <= 0) {
-                    System.out.println("Ошибка.Количество не может быть меньше 0");
-
-                    continue;
-                }
-
             } catch (NumberFormatException e) {
                 System.out.println("Ошибка. Нужно вводить только числа");
                 continue;
             }
 
-            numer[productNum] += amount;
+            if ((productNum + 1) > products.length || productNum + 1 <= 0) {
+                System.out.println("Ошибка.Нужно выбрать номер продукта из списка");
+                continue;
+            }
 
-            int sum = amount * price[productNum];
+            if (yourBasket[productNum] + amount < 0) {
+                System.out.println("Количество товара в корзине не может быть меньше 0");
+                continue;
+            }
+            if (amount == 0) {
+                total -= (yourBasket[productNum] * price[productNum]);
+                yourBasket[productNum] = 0;
+            } else {
+                yourBasket[productNum] = yourBasket[productNum] + amount;
+                int sum = amount * price[productNum];
+                total += sum;
+            }
 
-            yourBasket[productNum] = yourBasket[productNum] + amount;
-            total += sum;
 
             System.out.println("Ваша корзина:");
             for (int m = 0; m < products.length; m++) {
@@ -66,6 +68,7 @@ public class Main {
                     System.out.println(products[m] + " " + yourBasket[m] + " ед. " + currentPrice + " руб. в сумме");
                 }
             }
+
             System.out.println("Итого: " + total + " руб");
         }
     }
